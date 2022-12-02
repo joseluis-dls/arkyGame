@@ -4,7 +4,6 @@ from niveluno import nivel1
 from nivel2 import nivel2
 from nivel3 import nivel3
 from mainesp import menuesp
-from nvll1rep import nivel1rep
 
 #Pantalla - ventana
 W, H = 700, 400           #VALORES PARA EL TAMAÑO DE LA VENTANA 
@@ -29,7 +28,7 @@ sonido_boton = pygame.mixer.Sound("sonidoboton2.mp3")
 sonido_has_perdido = pygame.mixer.Sound("sonidohasperdido.mp3") 
 
     #MUSICA JUEGO
-pygame.mixer.music.load("musica start.mp3")
+pygame.mixer.music.load("menu music.mp3")
 pygame.mixer.music.set_volume(0.5)     #MODIFICADOR DE VOLUMEN DE MUSICA DEL JUEGO
 
 #MUSICA JUEGO
@@ -54,7 +53,7 @@ running = True
 nivel_dos = True
 while running:
     inicio()
-    from main import menu
+    running = False
 
     
 

@@ -4,7 +4,7 @@ from niveluno import nivel1
 from nivel2 import nivel2
 from nivel3 import nivel3
 from mainesp import menuesp
-from nvll1rep import nivel1rep
+
 
 
 #Pantalla - ventana
@@ -36,7 +36,7 @@ pantalla_idioma = pygame.image.load("imagenes/imagenes/language.png").convert()
 sonido_boton = pygame.mixer.Sound("sonidoboton2.mp3")
 sonido_has_perdido = pygame.mixer.Sound("sonidohasperdido.mp3") 
 
-    #MUSICA JUEGO
+    #MUSICA JUEGO 
 pygame.mixer.music.load("menu music.mp3")
 pygame.mixer.music.set_volume(0.5)     #MODIFICADOR DE VOLUMEN DE MUSICA DEL JUEGO
 
@@ -276,6 +276,7 @@ score = 0
 running = True  
 nivel_dos = True
 while running:
+    from inicio import inicio
     menu()
 
     clock.tick(60) #60 FPS

@@ -1,6 +1,5 @@
 import pygame, random, sys
 from mainesp import menuesp
-from menu import menuu
 
 def nivel1():
 

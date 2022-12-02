@@ -212,7 +212,7 @@ def nivel3esp():
                 if event.type == pygame.QUIT: sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
                     if boton_menu.collidepoint(pygame.mouse.get_pos()):
-                        from main import menu
+                        from mainesp import menuesp
                     if boton_exit.collidepoint(pygame.mouse.get_pos()):
                         exit()
         
@@ -544,14 +544,14 @@ def nivel3esp():
                         self.rect = self.image.get_rect()
                         self.rect.x = random.randrange(W - self.rect.width) #HACER QUE APAREZCAN LOS ITEMS DE MANERA ALEATORIA EN LA PANTALLA
                         self.rect.y = random.randrange(-100, -40)    #VALOR DE BAJADA DE LOS ITEMS
-                        self.speedy = random.randrange(1,6)  # VELOCIDAD ALEATORIA DE LOS ITEMS
+                        self.speedy = random.randrange(6,7)  # VELOCIDAD ALEATORIA DE LOS ITEMS
 
                     def update(self):
                         self.rect.y += self.speedy  #AUMMENTAMOS LA VELOCIDAD
                         if self.rect.top > H + 10 or self.rect.left < -25 or self.rect.right > W + 25:
                             self.rect.x = random.randrange(W - self.rect.width) 
                             self.rect.y = random.randrange(-100, -40)    
-                            self.speedy = random.randrange(1,6)
+                            self.speedy = random.randrange(6,7)
 
                 class Control(pygame.sprite.Sprite):
                     def __init__(self):
