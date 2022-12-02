@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, sys
 from mainesp import menuesp
 from menu import menuu
 
@@ -190,9 +190,55 @@ def nivel1():
                         if event.key == pygame.K_SPACE:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MEMNU
                             waiting = False  # SE DEJA DE ESPERAR
 
+        font = pygame.font.SysFont("serif", 30)  #SELECCIONAR UNA FUENTE
+        def pintar_boton(PANTALLA ,boton, palabra):
+            if boton.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(PANTALLA,(83,212,254,255), boton, 0) 
+            else:
+                
+                pygame.draw.rect(PANTALLA, (83,212,254,255), boton, 0)
+
+            texto = font.render(palabra, True, (NEGRO)) 
+            PANTALLA.blit(texto, (boton.x +(boton.width-texto.get_width())/2,
+                                boton.y +(boton.height-texto.get_height())/2))
+
+        boton_menu = pygame.Rect(550,290,140,50)
+        boton_exit = pygame.Rect(50,320,80,50)
+
+        def gover():     #FUNCION NIVEL 2
+            PANTALLA.blit(gonv1, [0,0])        #SE INGRESA IMAGEN
+            pygame.display.flip()
+            waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+            while waiting:          #MIENTRAS SE ESPERA
+                clock.tick(60)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT: sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+                        if boton_menu.collidepoint(pygame.mouse.get_pos()):
+                            from main import menu
+                        if boton_exit.collidepoint(pygame.mouse.get_pos()):
+                            exit()
+            
+                pintar_boton(PANTALLA, boton_menu, "Volumen")
+                pintar_boton(PANTALLA, boton_exit, "Volumen")
+        
+
 
         def nivel_2():     #FUNCION NIVEL 2
             PANTALLA.blit(intro_nivel_2, [0,0])        #SE INGRESA IMAGEN
+            pygame.display.flip()
+            waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+            while waiting:          #MIENTRAS SE ESPERA
+                clock.tick(60)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                    if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
+                        if event.key == pygame.K_SPACE:
+                            waiting = False  # SE DEJA DE ESPERAR
+
+        def infoitem():     #FUNCION NIVEL 2
+            PANTALLA.blit(instruitem, [0,0])        #SE INGRESA IMAGEN
             pygame.display.flip()
             waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
             while waiting:          #MIENTRAS SE ESPERA
@@ -321,6 +367,8 @@ def nivel1():
         fact1 = pygame.image.load("imagenes/imagenes/fact1.png").convert()
         fact2 = pygame.image.load("imagenes/imagenes/fact2.png").convert()
         fact3 = pygame.image.load("imagenes/imagenes/fact3.png").convert()
+        gonv1 = pygame.image.load("imagenes/imagenes/go nv1.png").convert()
+        instruitem = pygame.image.load("imagenes/imagenes/pantalla_itmesp.png").convert()
 
         #SONIDOS
         sonido_libro = pygame.mixer.Sound("sonidolibro.mp3")
@@ -341,6 +389,7 @@ def nivel1():
             if game_over:
 
                 rules()
+                infoitem()
 
                 game_over = False 
                 all_sprites = pygame.sprite.Group()
@@ -382,8 +431,7 @@ def nivel1():
                 sonido_has_perdido.play()
             if personaje.shield <= 0:  #SI LA VIDA ES MENOR O IGUAL A CERO TE LLEVA AL GAME OVER
                     sonido_has_perdido.play()
-                    running == False
-                    from  main import menu
+                    gover()
             punto = pygame.sprite.spritecollide(personaje, libro_list, True)    
             punto_especial = pygame.sprite.spritecollide(personaje, items_especiales_list, True)
             punto_especial2 = pygame.sprite.spritecollide(personaje, items_especiales_list2, True)

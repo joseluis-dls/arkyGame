@@ -49,6 +49,8 @@ boton_nivel_2 = pygame.Rect(160,220,140,50)
 boton_nivel_3 = pygame.Rect(160,290,140,50)
 boton_opciones = pygame.Rect(10,20,80,50)
 boton_volumen = pygame.Rect(250,120,250,50)
+boton_quitar_vol = pygame.Rect(120,100,250,50)
+boton_poner_vol = pygame.Rect(300,100,250,50)
 boton_idioma = pygame.Rect(250,280,250,50)
 boton_español = pygame.Rect(160,150,140,50)
 boton_ingles = pygame.Rect(160,200,50,50)
@@ -131,16 +133,27 @@ def pintar_boton(PANTALLA ,boton, palabra):
 
 
 def Pvolumen():     #FUNCION NIVEL 2
-            PANTALLA.blit(volumen, [0,0])        #SE INGRESA IMAGEN
-            pygame.display.flip()
-            waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
-            while waiting:          #MIENTRAS SE ESPERA
-                clock.tick(60)
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT: sys.exit()
-                    if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
-                        if event.key == pygame.K_SPACE:
-                            waiting = False  # SE DEJA DE ESPERAR
+    PANTALLA.blit(volumen, [0,0])        #SE INGRESA IMAGEN
+    pygame.display.flip()
+    waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+    while waiting:          #MIENTRAS SE ESPERA
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+            if event.type == MOUSEBUTTONDOWN and event.button==1:
+                if boton_quitar_vol.collidepoint(pygame.mouse.get_pos()):
+                    sonido_boton.play()
+                    pygame.mixer.music.set_volume(0.0)     #MODIFICADOR DE VOLUMEN DE MUSICA DEL JUEGO
+                if boton_poner_vol.collidepoint(pygame.mouse.get_pos()):
+                    sonido_boton.play()
+                    pygame.mixer.music.set_volume(0.5)     #MODIFICADOR DE VOLUMEN DE MUSICA DEL JUEGO              
+            if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
+                if event.key == pygame.K_SPACE:
+                    sonido_boton.play()
+                    waiting = False  # SE DEJA DE ESPERAR
+
+        pintar_boton(PANTALLA, boton_quitar_vol, "Volumen")
+        pintar_boton(PANTALLA, boton_poner_vol, "Volumen")
 
 def inicio():     #FUNCION NIVEL 2
     PANTALLA.blit(go, [0,0])        #SE INGRESA IMAGEN

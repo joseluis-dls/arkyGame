@@ -52,17 +52,17 @@ def nivel2():
             self.spritesRight = []
             self.spritesLeft = []
 
-            self.spritesRight.append(pygame.image.load("animaciones3/arky_baston1.png").convert())  # MOVIMIENTO DERECHA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
-            self.spritesRight.append(pygame.image.load("animaciones3/arky_baston2.png").convert())
-            self.spritesRight.append(pygame.image.load("animaciones3/arky_baston3.png").convert())
-            self.spritesRight.append(pygame.image.load("animaciones3/arky_baston4.png").convert())
-            self.spritesRight.append(pygame.image.load("animaciones3/arky_baston5.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo1.png").convert())  # MOVIMIENTO DERECHA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo2.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo3.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo4.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo5.png").convert())
 
-            self.spritesLeft.append(pygame.image.load("animaciones3/arky_bastonL1.png").convert())  # MOVIMIENTO IZQUIERDA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
-            self.spritesLeft.append(pygame.image.load("animaciones3/arky_bastonL2.png").convert())
-            self.spritesLeft.append(pygame.image.load("animaciones3/arky_bastonL3.png").convert())
-            self.spritesLeft.append(pygame.image.load("animaciones3/arky_bastonL4.png").convert())
-            self.spritesLeft.append(pygame.image.load("animaciones3/arky_bastonL5.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL1.png").convert())  # MOVIMIENTO IZQUIERDA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL2.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL3.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL4.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL5.png").convert())
 
             self.current_spriteRight = 0 #UBICAR EN QUÉ SPRITE SE ENCUENTRA ACTUALMENTE
             self.image = self.spritesRight[self.current_spriteRight]
@@ -249,6 +249,20 @@ def nivel2():
                 if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
                     if event.key == pygame.K_SPACE:
                         waiting = False  # SE DEJA DE ESPERAR
+    
+    def infoitem():     #FUNCION NIVEL 2
+        PANTALLA.blit(instruitem, [0,0])        #SE INGRESA IMAGEN
+        pygame.display.flip()
+        waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+        while waiting:          #MIENTRAS SE ESPERA
+            clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
+                    if event.key == pygame.K_SPACE:
+                        waiting = False  # SE DEJA DE ESPERAR
+
 
     def factos1():     #FUNCION NIVEL 2
         PANTALLA.blit(fact1, [0,0])        #SE INGRESA IMAGEN
@@ -366,6 +380,7 @@ def nivel2():
     fact2 = pygame.image.load("imagenes/imagenes/fact2lv2.png").convert()
     fact3 = pygame.image.load("imagenes/imagenes/fact3lv2.png").convert()
     gonv2 = pygame.image.load("imagenes/imagenes/go nv2.png").convert()
+    instruitem = pygame.image.load("imagenes/imagenes/pantalla_itmesplv2.png").convert()
 
     #SONIDOS
     sonido_libro = pygame.mixer.Sound("sonidolibro.mp3")
@@ -392,6 +407,7 @@ def nivel2():
         if game_over:
 
             rules()
+            infoitem()
 
             game_over = False 
             all_sprites = pygame.sprite.Group()
@@ -507,7 +523,7 @@ def nivel2():
                     def __init__(self):
                         super().__init__()
                         self.image = random.choice(libros_imagenes)  #ELIGE UN LIBRO AL ALZAR DEL COMANDO LIBROS_IMAGENES PARA SPAWNEAR
-                        self.image.set_colorkey(BLANCO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
+                        self.image.set_colorkey(NEGRO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
                         self.rect = self.image.get_rect()
                         self.rect.x = random.randrange(W - self.rect.width) #HACER QUE APAREZCAN LOS ITEMS DE MANERA ALEATORIA EN LA PANTALLA
                         self.rect.y = random.randrange(-100, -40)    #VALOR DE BAJADA DE LOS ITEMS

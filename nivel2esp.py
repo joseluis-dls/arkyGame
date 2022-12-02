@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, sys
 def nivel2esp():
 
     #Pantalla - ventana
@@ -43,33 +43,89 @@ def nivel2esp():
     class Personaje(pygame.sprite.Sprite):     #CREACION DE CLASE PARA EL PERSONAJE
         def __init__(self):             #INICIALIZAR LA CLASE
             super().__init__()          #INICIALIZAR LA SUPER CLASE
-            self.image = pygame.image.load("imagenes/imagenes/monoculo.png").convert()  #AGREGANDO PERSONAJE, #COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
-            self.image.set_colorkey(BLANCO) #CON ESTA FUNCION SE REMUEVE EL FONDO NEGRO DE LA IMAGEN
+            self.moving_animationRight = False
+            self.moving_animationLeft = False
+
+            self.spritesRight = []
+            self.spritesLeft = []
+
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo1.png").convert())  # MOVIMIENTO DERECHA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo2.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo3.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo4.png").convert())
+            self.spritesRight.append(pygame.image.load("animaciones3/arky_monoculo5.png").convert())
+
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL1.png").convert())  # MOVIMIENTO IZQUIERDA; COMANDO CONVERT SIRVE PARA ACELERAR EL JUEGO Y CONSUMIR MENOS RECURSOS
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL2.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL3.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL4.png").convert())
+            self.spritesLeft.append(pygame.image.load("animaciones3/arky_monoculoL5.png").convert())
+
+            self.current_spriteRight = 0 #UBICAR EN QUÉ SPRITE SE ENCUENTRA ACTUALMENTE
+            self.image = self.spritesRight[self.current_spriteRight]
+            self.current_spriteLeft = 0
+            self.imageLeft = self.spritesLeft[self.current_spriteLeft]
+            
+            
             self.rect = self.image.get_rect()  #OBTENER LA RECTA O CUADRO DEL SPRITE
-            self.rect.centerx = W // 2     #PONERLO EN PANTALLA
-            self.rect.bottom = H -10        #PONERLO EN PANTALLA
+            self.rectLeft = self.imageLeft.get_rect()
+
+            self.rect.centerx = 700 // 2     #PONERLO EN PANTALLA
+            self.rect.bottom = 400 - 10        #PONERLO EN PANTALLA
             self.speed_x = 0                #MODIFICAR LA VELOCIDAD DEL PERSONAJE
             self.shield = 100               #MODIFICAR LA VIDA DEL PERSONAJE
 
+            
+        def movingRight(self):
+            self.moving_animationRight = True
+
+        def movingLeft(self):
+            self.moving_animationLeft = True
+
         def update(self):
+            
             self.speed_x = 0
-            keystate = pygame.key.get_pressed()  #COMADO GET_PRESSED SIRVE PARA PODER DEJAT PRESIONADA UNA LETRA
+            
+            if self.moving_animationRight == True:
+                self.current_spriteRight += 0.25
+                if int(self.current_spriteRight) >= len(self.spritesRight):
+                    self.current_spriteRight = 0
+                    self.moving_animationRight = False
+            if self.moving_animationLeft == True:
+                self.current_spriteLeft += 0.25
+                if int(self.current_spriteLeft) >= len(self.spritesLeft):
+                    self.current_spriteLeft = 0
+                    self.moving_animationLeft = False
+            
+            if self.moving_animationRight == True:
+                self.image = self.spritesRight[int(self.current_spriteRight)]
+                
+            if self.moving_animationLeft == True:
+                self.image = self.spritesLeft[int(self.current_spriteLeft)]
+
+            self.image.set_colorkey((NEGRO))
+            self.imageLeft.set_colorkey((NEGRO))
+            keystate = pygame.key.get_pressed()  #COMADO GET_PRESSED SIRVE PARA PODER DEJAR PRESIONADA UNA LETRA
+
             if keystate[pygame.K_LEFT]:          #SELECCION DE TECLA PARA MOVER A LA IZQUIERDA
                 self.speed_x = -5         #VELOCIDAD PERSONAJE
+                self.movingLeft()
             if keystate[pygame.K_RIGHT]:         #SELECCION DE TECLA PARA MOVER A LA DERECHA
                 self.speed_x = 5          #VELOCIDAD PERSONAJE
+                self.movingRight()
+            
             self.rect.x += self.speed_x    
-            if self.rect.right > W:        # FUNCION PARA QUE EL PERSONAJE NO SE SALGA D ELA PANTALLA
-                self.rect.right = W        # SI EL LADO DERECHO DE MI PERSONAJE ES MAYOR A W SE IGUALA A W PARA QUE YA NO PUEDA SEGUIR MAS
+            if self.rect.right > 700:        # FUNCION PARA QUE EL PERSONAJE NO SE SALGA D ELA PANTALLA
+                self.rect.right = 700        # SI EL LADO DERECHO DE MI PERSONAJE ES MAYOR A W SE IGUALA A W PARA QUE YA NO PUEDA SEGUIR MAS
             if self.rect.left < 0:         # SI EL LADO IZQUIERDO DE MI PERSONAJE ES MEMNOR A CERO SE IGUALA A CERO PARA QUE NO PUEDA SEGUIR MAS
-                self.rect.left = 0 
+                self.rect.left = 0
 
     #----------------------------ITEMS--------------------------------------------------------------------------------
     class Libros(pygame.sprite.Sprite):
         def __init__(self):
             super().__init__()
             self.image = random.choice(libros_imagenes)  #ELIGE UN LIBRO AL ALZAR DEL COMANDO LIBROS_IMAGENES PARA SPAWNEAR
-            self.image.set_colorkey(BLANCO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
+            self.image.set_colorkey(NEGRO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
             self.rect = self.image.get_rect()
             self.rect.x = random.randrange(W - self.rect.width) #HACER QUE APAREZCAN LOS ITEMS DE MANERA ALEATORIA EN LA PANTALLA
             self.rect.y = random.randrange(-100, -40)    #VALOR DE BAJADA DE LOS ITEMS
@@ -145,6 +201,42 @@ def nivel2esp():
                         waiting = False  # SE DEJA DE ESPERAR
 
 
+    font = pygame.font.SysFont("serif", 30)  #SELECCIONAR UNA FUENTE
+    def pintar_boton(PANTALLA ,boton, palabra):
+        if boton.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(PANTALLA,(83,212,254,255), boton, 0) 
+        else:
+            
+            pygame.draw.rect(PANTALLA, (83,212,254,255), boton, 0)
+
+        texto = font.render(palabra, True, (NEGRO)) 
+        PANTALLA.blit(texto, (boton.x +(boton.width-texto.get_width())/2,
+                            boton.y +(boton.height-texto.get_height())/2))
+
+
+    boton_menu = pygame.Rect(550,290,140,50)
+    boton_exit = pygame.Rect(50,320,80,50)
+
+
+    def gover():     #FUNCION NIVEL 2
+        PANTALLA.blit(gonv2, [0,0])        #SE INGRESA IMAGEN
+        pygame.display.flip()
+        waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+        while waiting:          #MIENTRAS SE ESPERA
+            clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button==1:
+                    if boton_menu.collidepoint(pygame.mouse.get_pos()):
+                        from main import menu
+                    if boton_exit.collidepoint(pygame.mouse.get_pos()):
+                        exit()
+        
+            pintar_boton(PANTALLA, boton_menu, "Volumen")
+            pintar_boton(PANTALLA, boton_exit, "Volumen")
+
+
+
     def nivel_2():     #FUNCION NIVEL 2
         PANTALLA.blit(intro_nivel_2, [0,0])        #SE INGRESA IMAGEN
         pygame.display.flip()
@@ -157,6 +249,20 @@ def nivel2esp():
                 if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
                     if event.key == pygame.K_SPACE:
                         waiting = False  # SE DEJA DE ESPERAR
+
+    def infoitem():     #FUNCION NIVEL 2
+        PANTALLA.blit(instruitemesp, [0,0])        #SE INGRESA IMAGEN
+        pygame.display.flip()
+        waiting = True          #MIENTRAS SE COMIENZA A ESPERAR
+        while waiting:          #MIENTRAS SE ESPERA
+            clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:     #MIENTRAS SE PRESIONE UNA TECLA SE QUITA EL MENU
+                    if event.key == pygame.K_SPACE:
+                        waiting = False  # SE DEJA DE ESPERAR
+
 
     def factos1():     #FUNCION NIVEL 2
             PANTALLA.blit(fact1, [0,0])        #SE INGRESA IMAGEN
@@ -232,7 +338,7 @@ def nivel2esp():
 
 
     libros_imagenes = []       #CREAMOS UNA LISTA CON TODOS LOS ITEMS PARA DESPUES ASIGANRLO A LA VARIABLE DE LIBROS_IMAGENES
-    libros_list = ["imagenes/imagenes/lapiz.png", "imagenes/imagenes/calculadora.png"]
+    libros_list = ["imagenes/imagenes/lapiz.png", "imagenes/imagenes/regla.png"]
 
     for img in libros_list:
         libros_imagenes.append(pygame.image.load(img).convert())  #PROCESO PARA ASIGNAR LA VARIABLE CON LAS IMAGENES A LA NUEVA VARIABLE
@@ -244,20 +350,20 @@ def nivel2esp():
         control_imagenes.append(pygame.image.load(img).convert())
 
     items_especiales = []     #CREAMOS UNA LISTA CON TODOS LOS ITEMS PARA DESPUES ASIGANRLO A LA VARIABLE DE CONTROL_IMAGENES
-    items_especiales_list = ["imagenes/imagenes/calculadora esp.png"]
+    items_especiales_list = ["imagenes/imagenes/calculadora_esp.png"]
 
     for img in items_especiales_list:
         items_especiales.append(pygame.image.load(img).convert())
     
 
     items_especiales2 = []     #CREAMOS UNA LISTA CON TODOS LOS ITEMS PARA DESPUES ASIGANRLO A LA VARIABLE DE CONTROL_IMAGENES
-    items_especiales_list2 = ["imagenes/imagenes/calculadora esp.png"]
+    items_especiales_list2 = ["imagenes/imagenes/calculadora_esp.png"]
 
     for img in items_especiales_list2:
         items_especiales2.append(pygame.image.load(img).convert())
 
     items_especiales3 = []     #CREAMOS UNA LISTA CON TODOS LOS ITEMS PARA DESPUES ASIGANRLO A LA VARIABLE DE CONTROL_IMAGENES
-    items_especiales_list3 = ["imagenes/imagenes/calculadora esp.png"]
+    items_especiales_list3 = ["imagenes/imagenes/calculadora_esp.png"]
 
     for img in items_especiales_list3:
         items_especiales3.append(pygame.image.load(img).convert())
@@ -275,6 +381,8 @@ def nivel2esp():
     fact1 = pygame.image.load("imagenes/imagenes/fact1lv2esp.png").convert()
     fact2 = pygame.image.load("imagenes/imagenes/fact2lvesp.png").convert()
     fact3 = pygame.image.load("imagenes/imagenes/fact3lv2esp.png").convert()
+    gonv2 = pygame.image.load("imagenes/imagenes/go nv2.png").convert()
+    instruitemesp = pygame.image.load("imagenes/imagenes/pantalla_itmesplv2_español.png").convert()
 
     #SONIDOS
     sonido_libro = pygame.mixer.Sound("sonidolibro.mp3")
@@ -303,6 +411,7 @@ def nivel2esp():
         if game_over:
 
             rules()
+            infoitem()
 
             game_over = False 
             all_sprites = pygame.sprite.Group()
@@ -341,8 +450,7 @@ def nivel2esp():
             sonido_has_perdido.play()
             if personaje.shield <= 0:  #SI LA VIDA ES MENOR O IGUAL A CERO TE LLEVA AL GAME OVER
                 sonido_has_perdido.play()
-                running = False
-                from mainesp import menuesp
+                gover()
             
         #punto_especial = pygame.sprite.spritecollide(personaje, items_especiales_list, True)
         punto = pygame.sprite.spritecollide(personaje, libro_list, True)
@@ -417,7 +525,7 @@ def nivel2esp():
                     def __init__(self):
                         super().__init__()
                         self.image = random.choice(libros_imagenes)  #ELIGE UN LIBRO AL ALZAR DEL COMANDO LIBROS_IMAGENES PARA SPAWNEAR
-                        self.image.set_colorkey(BLANCO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
+                        self.image.set_colorkey(NEGRO)               #QUITA EL FONDO NEGRO DE LA IMAGEN
                         self.rect = self.image.get_rect()
                         self.rect.x = random.randrange(W - self.rect.width) #HACER QUE APAREZCAN LOS ITEMS DE MANERA ALEATORIA EN LA PANTALLA
                         self.rect.y = random.randrange(-100, -40)    #VALOR DE BAJADA DE LOS ITEMS
